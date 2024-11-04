@@ -4,8 +4,8 @@ import time
 import cv2 as cv
 import alsaaudio
 import math
-import Hand_tracking as ht
-from Volume_hand_control import results
+import Hand_Track as ht
+
 
 cap=cv.VideoCapture(0)
 ptime =0
@@ -24,19 +24,20 @@ while True:
         break
     frame,results  = detector.findHands(frame)
     lmlist = detector.findPosition(frame)
-    if lmlist!=0:
-        x1,y1 = lmlist[4][1],lmlist[4][2]
-        x2,y2 = lmlist[8][1],lmlist[8][2]
-        cv.circle(frame,(x1,y1),5,(255,0,0),cv.FILLED)
-        cv.circle(frame,(x2,y2),5,(255,0,0),cv.FILLED)
-        cv.line(frame,(x1,y1),(x2,y2),(255,0,0),2)
-        length=math.hypot(x2-x1,y2-y1)
-        volume=get_volume_level(length)
+    if len(lmlist) > 4:  # Check if the list has enough landmarks
+        x1, y1 = lmlist[4][1], lmlist[4][2]
+        x2, y2 = lmlist[8][1], lmlist[8][2]
+        cv.circle(frame, (x1, y1), 5, (255, 0, 0), -1)
+        cv.circle(frame, (x2, y2), 5, (255, 0, 0), -1)
+        cv.line(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+        length = math.hypot(x2 - x1, y2 - y1)
+        volume = get_volume_level(length)
         mixer.setvolume(volume)
         print(f"Distance: {length}, Volume Level: {volume}%")  # Debug print
 
         # Display volume level on the frame
         cv.putText(frame, f'Volume: {volume}%', (50, 450), cv.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
+
 
 
 
