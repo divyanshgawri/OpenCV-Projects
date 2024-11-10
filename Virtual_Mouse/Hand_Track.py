@@ -14,7 +14,7 @@ class HandsDetection():
             static_image_mode=self.mode,
             max_num_hands=self.maxHands,
             min_detection_confidence=self.detectionCon,
-            min_tracking_confidence=self.trackingCon
+            min_tracking_confidence=self.trackingCon,
         )
         self.mpDraw = mp.solutions.drawing_utils
 
